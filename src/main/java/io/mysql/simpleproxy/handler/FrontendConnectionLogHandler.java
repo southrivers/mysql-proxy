@@ -59,7 +59,8 @@ public class FrontendConnectionLogHandler extends ChannelInboundHandlerAdapter {
 				System.out.println("==========");
 				System.out.println(originSql);
 				System.out.println("==========");
-				String modifySql = "select * from quick_start.order_list limit 1";
+				// 后面只需要对sql进行修改就可以了
+				String modifySql = "select * from quickstart.order_list limit 1";
 				byte[] modifySqlBytes = modifySql.getBytes(Charsets.UTF_8);
 				int modifySqlLength = modifySqlBytes.length;
 				ByteBuf outBuf = Unpooled.buffer(4 + modifySqlLength);
