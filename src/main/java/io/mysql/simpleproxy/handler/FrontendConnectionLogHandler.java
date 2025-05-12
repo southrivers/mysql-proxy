@@ -1,5 +1,7 @@
 package io.mysql.simpleproxy.handler;
 
+import com.google.common.base.Charsets;
+import io.netty.buffer.Unpooled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,9 +44,40 @@ public class FrontendConnectionLogHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		logger.info("on frontend channel [{}] read, will write data directly to backend, data:\r\n {}",
-				IpUtil.getRemoteAddress(ctx.channel()), ByteBufUtil.prettyHexDump((ByteBuf) msg));
-		ctx.fireChannelRead(msg);
+
+		ByteBuf buf = (ByteBuf) msg;
+		buf.markReaderIndex();
+		int payloadLength = buf.readUnsignedMediumLE();
+		int sequenceId = buf.readUnsignedByte();
+		int commandId = buf.readUnsignedByte();
+		if (commandId == 0x03) {
+			int sqlLength = payloadLength - 1;
+			byte[] data = new byte[sqlLength];
+			buf.readBytes(data);
+			String originSql = new String(data, Charsets.UTF_8);
+			if (originSql.contains("quickstart.goods")) {
+				System.out.println("==========");
+				System.out.println(originSql);
+				System.out.println("==========");
+				String modifySql = "select * from quick_start.order_list limit 1";
+				byte[] modifySqlBytes = modifySql.getBytes(Charsets.UTF_8);
+				int modifySqlLength = modifySqlBytes.length;
+				ByteBuf outBuf = Unpooled.buffer(4 + modifySqlLength);
+				outBuf.writeMediumLE(modifySqlLength + 1);
+				outBuf.writeByte(sequenceId);
+				outBuf.writeByte(0x03);
+				outBuf.writeBytes(modifySqlBytes);
+				ctx.fireChannelRead(outBuf);
+				// TODO 这里bytebuf不能释放，否则会报错，这里需要看一下netty相关资料
+//				outBuf.release();
+			} else {
+				buf.resetReaderIndex();
+				ctx.fireChannelRead(msg);
+			}
+		} else {
+			buf.resetReaderIndex();
+			ctx.fireChannelRead(msg);
+		}
 	}
 
 	@Override
