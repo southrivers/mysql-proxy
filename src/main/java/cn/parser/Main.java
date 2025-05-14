@@ -17,6 +17,10 @@ public class Main {
         CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
         StarRocksParser parser = new StarRocksParser(commonTokenStream);
         // 这里起始节点是statement，返回的是StatementContext
-        System.out.println(parser.statement().toStringTree());
+//        System.out.println(parser.statement().toStringTree());
+        StarRocksParser.StatementContext statement = parser.statement();
+        MyVisitor myParser = new MyVisitor();
+//        parser.queryRelation().accept(myParser);
+        statement.accept(myParser);
     }
 }
