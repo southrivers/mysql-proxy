@@ -19,7 +19,7 @@ public class Main {
         // 构建visitor
         MyVisitor myVisitor = new MyVisitor();
         // 使用viistor访问对应的语法树
-        myVisitor.visit(parser.singleStatement());
+        myVisitor.visit(parser.sqlStatements());
         // 这里起始节点是statement，返回的是StatementContext
 //        System.out.println(parser.statement().toStringTree());
 

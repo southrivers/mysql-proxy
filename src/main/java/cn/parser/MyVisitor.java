@@ -6,21 +6,45 @@ package cn.parser;
 public class MyVisitor extends StarRocksBaseVisitor<String>{
 
     @Override
-    public String visitSingleStatement(StarRocksParser.SingleStatementContext ctx) {
+    public String visitSqlStatements(StarRocksParser.SqlStatementsContext ctx) {
+        return visit(ctx.singleStatement(0));
+    }
 
+    @Override
+    public String visitSingleStatement(StarRocksParser.SingleStatementContext ctx) {
+        System.out.println("step1");
         return visit(ctx.statement());
     }
 
     @Override
     public String visitStatement(StarRocksParser.StatementContext ctx) {
-        return super.visitStatement(ctx);
+        System.out.println("step2");
+        return visit(ctx.queryStatement());
     }
 
     @Override
-    public String visitFrom(StarRocksParser.FromContext ctx) {
-        System.out.println(ctx.getText());
-        return super.visitFrom(ctx);
+    public String visitQueryStatement(StarRocksParser.QueryStatementContext ctx) {
+        System.out.println("step3");
+        return visit(ctx.queryRelation());
     }
+
+    @Override
+    public String visitQueryRelation(StarRocksParser.QueryRelationContext ctx) {
+        System.out.println("step4");
+        return visit(ctx.queryNoWith());
+    }
+
+    @Override
+    public String visitSetOperation(StarRocksParser.SetOperationContext ctx) {
+        System.out.println("step5");
+        return super.visitSetOperation(ctx);
+    }
+
+    //    @Override
+//    public String visitFrom(StarRocksParser.FromContext ctx) {
+//        System.out.println(ctx.getText());
+//        return super.visitFrom(ctx);
+//    }
 }
 
 
