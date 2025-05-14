@@ -16,7 +16,12 @@ public class Main {
         StarRocksLexer lexer = new StarRocksLexer(input);
         CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
         StarRocksParser parser = new StarRocksParser(commonTokenStream);
+        // 构建visitor
+        MyVisitor myVisitor = new MyVisitor();
+        // 使用viistor访问对应的语法树
+        myVisitor.visit(parser.singleStatement());
         // 这里起始节点是statement，返回的是StatementContext
-        System.out.println(parser.statement().toStringTree());
+//        System.out.println(parser.statement().toStringTree());
+
     }
 }
