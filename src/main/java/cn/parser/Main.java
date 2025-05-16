@@ -31,8 +31,12 @@ public class Main {
         // TODO 应该使用被访问对象的accept方法来接收visitor并触发对象的访问，待分析双分派模式
         parser.statement().accept(myVisitor);*/
         // 使用viistor访问对应的语法树
+//<<<<<<< HEAD
         // TODO 不能使用visitor的visit方法直接访问某个节点，这样起不到动态的效果，待分析原因
 //        myVisitor.visit(parser.singleStatement());
+//=======
+//        myVisitor.visit(parser.sqlStatements());
+//>>>>>>> b4dd17f46c9258112ee5b8afcd6435c6a9b4e0fc
         // 这里起始节点是statement，返回的是StatementContext
 //        System.out.println(parser.statement().toStringTree());
 

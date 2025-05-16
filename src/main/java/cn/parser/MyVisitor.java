@@ -10,6 +10,7 @@ import java.util.List;
 public class MyVisitor extends StarRocksBaseVisitor<String>{
 
     @Override
+<<<<<<< HEAD
     public String visitQuerySpecification(StarRocksParser.QuerySpecificationContext ctx) {
         // TODO 应该在这里作为入口实现sql重写
         // 选择的字段
@@ -50,7 +51,47 @@ public class MyVisitor extends StarRocksBaseVisitor<String>{
         // 分组条件
         StarRocksParser.GroupingElementContext groupingElementContext = ctx.groupingElement();
         return null;
+=======
+    public String visitSqlStatements(StarRocksParser.SqlStatementsContext ctx) {
+        return visit(ctx.singleStatement(0));
     }
+
+    @Override
+    public String visitSingleStatement(StarRocksParser.SingleStatementContext ctx) {
+        System.out.println("step1");
+        return visit(ctx.statement());
+    }
+
+    @Override
+    public String visitStatement(StarRocksParser.StatementContext ctx) {
+        System.out.println("step2");
+        return visit(ctx.queryStatement());
+    }
+
+    @Override
+    public String visitQueryStatement(StarRocksParser.QueryStatementContext ctx) {
+        System.out.println("step3");
+        return visit(ctx.queryRelation());
+>>>>>>> b4dd17f46c9258112ee5b8afcd6435c6a9b4e0fc
+    }
+
+    @Override
+    public String visitQueryRelation(StarRocksParser.QueryRelationContext ctx) {
+        System.out.println("step4");
+        return visit(ctx.queryNoWith());
+    }
+
+    @Override
+    public String visitSetOperation(StarRocksParser.SetOperationContext ctx) {
+        System.out.println("step5");
+        return super.visitSetOperation(ctx);
+    }
+
+    //    @Override
+//    public String visitFrom(StarRocksParser.FromContext ctx) {
+//        System.out.println(ctx.getText());
+//        return super.visitFrom(ctx);
+//    }
 }
 
 
