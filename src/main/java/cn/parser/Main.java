@@ -44,17 +44,23 @@ public class Main {
         System.out.println("解析视图");
         System.out.println("=============================");
         String cvSql = "CREATE VIEW unified_orders AS\n" +
-                "SELECT ITEM_ID1 AS ORDER_ID1, ITEM_NAME AS CLIENT_ID FROM GOODS\n" +
+                "SELECT ITEM_ID1 AS ORDER_ID, ITEM_NAME AS CLIENT_ID FROM GOODS\n" +
                 "UNION ALL\n" +
                 "SELECT ORDER_ID, CLIENT_ID FROM ORDER_LIST;\n";
-        ViewVisitor viewVisitor = new ViewVisitor();
-        CodePointCharStream codePointCharStream = CharStreams.fromString(cvSql);
+        CodePointCharStream codePointCharStream = CharStreams.fromString(cvSql.toUpperCase());
         StarRocksLexer starRocksLexer = new StarRocksLexer(codePointCharStream);
         CommonTokenStream tokenStream = new CommonTokenStream(starRocksLexer);
         StarRocksParser starRocksParser = new StarRocksParser(tokenStream);
 
-        String visit = viewVisitor.visit(starRocksParser.queryPrimary());
-        System.out.println(visit);
+        ViewVisitor viewVisitor = new ViewVisitor(tokenStream);
+        starRocksParser.statement().accept(viewVisitor);
+
+
+//        String visit = viewVisitor.visit();
+        // 这里返回的是最后一步获得的对象。
+//        System.out.println(visit);
+
+
     }
 
 }

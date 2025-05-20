@@ -7,10 +7,9 @@ import java.util.List;
 /**
  * 说明：这里的visit方法不应该返回super，而是当前visitor对象的对应的visit方法，这样就可以通过当前这一个visitor把所有的信息都收集到
  */
-public class MyVisitor extends StarRocksBaseVisitor<String>{
+public class MyVisitor extends StarRocksBaseVisitor<String> {
 
     @Override
-<<<<<<< HEAD
     public String visitQuerySpecification(StarRocksParser.QuerySpecificationContext ctx) {
         // TODO 应该在这里作为入口实现sql重写
         // 选择的字段
@@ -51,28 +50,7 @@ public class MyVisitor extends StarRocksBaseVisitor<String>{
         // 分组条件
         StarRocksParser.GroupingElementContext groupingElementContext = ctx.groupingElement();
         return null;
-=======
-    public String visitSqlStatements(StarRocksParser.SqlStatementsContext ctx) {
-        return visit(ctx.singleStatement(0));
-    }
 
-    @Override
-    public String visitSingleStatement(StarRocksParser.SingleStatementContext ctx) {
-        System.out.println("step1");
-        return visit(ctx.statement());
-    }
-
-    @Override
-    public String visitStatement(StarRocksParser.StatementContext ctx) {
-        System.out.println("step2");
-        return visit(ctx.queryStatement());
-    }
-
-    @Override
-    public String visitQueryStatement(StarRocksParser.QueryStatementContext ctx) {
-        System.out.println("step3");
-        return visit(ctx.queryRelation());
->>>>>>> b4dd17f46c9258112ee5b8afcd6435c6a9b4e0fc
     }
 
     @Override
